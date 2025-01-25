@@ -1,0 +1,58 @@
+﻿@page "/container"
+@rendermode InteractiveServer
+@using AzureBlobProject.Services
+@inject IContainerService ContainerService
+<PageTitle>Container</PageTitle>
+
+<div class="input-group mb-3">
+	<input type="text" class="form-control" placeholder="Container Name" @bind="newContainerName">
+	<button class="btn btn-outline-secondary" type="button" @onclick="CreateContainer">Create</button>
+</div>
+
+@if (containers != null)
+{
+	<ul class="list-group">
+		@foreach (var container in containers)
+		{
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+                <NavLink class="flex-grow-1 me-3" href="@($"/blob-manager/{container}")">@container</NavLink>
+				<button class="btn btn-danger btn-sm" @onclick="() => DeleteContainer(container)">Delete</button>
+			</li>
+		}
+	</ul>
+}
+
+@code {
+	private IEnumerable<string> containers;
+	private string newContainerName;
+
+	protected override async Task OnInitializedAsync()
+	{
+		containers = await ContainerService.GetAllContainer();
+	}
+
+	private async Task CreateContainer()
+	{
+		if (!string.IsNullOrEmpty(newContainerName))
+		{
+			try
+			{
+			await ContainerService.CreateContainer(newContainerName);
+			containers = await ContainerService.GetAllContainer();
+			newContainerName = string.Empty; // Reset input
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+
+		}
+	}
+
+	private async Task DeleteContainer(string containerName)
+	{
+		await ContainerService.DeleteContainer(containerName);
+		containers = await ContainerService.GetAllContainer();
+	}
+}

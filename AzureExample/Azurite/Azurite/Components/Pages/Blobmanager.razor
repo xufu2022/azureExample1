@@ -1,0 +1,61 @@
+﻿@page "/blob-manager/{ContainerName}"
+@using AzureBlobProject.Services
+@inject IBlobService BlobStorageService
+@rendermode InteractiveServer
+
+<h3>Manage Blobs in Container: @ContainerName</h3>
+
+<div class="input-group mb-3">
+	<InputFile OnChange="HandleFileSelected" class="form-control" />
+	<button class="btn btn-primary" @onclick="UploadBlob">Upload Blob</button>
+</div>
+
+@if (blobs != null)
+{
+	<ul class="list-group mt-3">
+		@foreach (var blob in blobs)
+		{
+			<li class="list-group-item d-flex justify-content-between align-items-center">
+				@blob
+				<button class="btn btn-danger btn-sm" @onclick="() => DeleteBlob(blob)">Delete</button>
+			</li>
+		}
+	</ul>
+}
+
+@code {
+	[Parameter]
+	public string ContainerName { get; set; }
+
+	private IEnumerable<string> blobs;
+	private IBrowserFile file;
+
+	protected override async Task OnInitializedAsync()
+	{
+		blobs = await BlobStorageService.GetAllBlobs(ContainerName);
+
+		var blobsWithUrls = await BlobStorageService.GetAllBlobsWithUri(ContainerName);
+		var count = blobsWithUrls.Count();
+	}
+
+	private void HandleFileSelected(InputFileChangeEventArgs e)
+	{
+		file = e.File;
+	}
+
+	private async Task UploadBlob()
+	{
+		if (file != null)
+		{
+			using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 15); // 15 MB limit
+			await BlobStorageService.UploadBlob(ContainerName, file.Name, stream);
+			blobs = await BlobStorageService.GetAllBlobs(ContainerName); // Refresh the list
+		}
+	}
+
+	private async Task DeleteBlob(string blobName)
+	{
+		await BlobStorageService.DeleteBlob(blobName,ContainerName);
+		blobs = await BlobStorageService.GetAllBlobs(ContainerName); // Refresh the list
+	}
+}
