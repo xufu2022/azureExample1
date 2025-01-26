@@ -1,0 +1,107 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@using AzureSamples.Models
+@using AzureSamples.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient Http
+@inject IBlobService BlobService;
+<h3 class="mb-4">Upload Multiple Files</h3>
+
+<EditForm Model="@uploadModel" OnValidSubmit="@UploadFiles" class="needs-validation" novalidate>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <!-- Vehicle ID Field -->
+    <div class="row mb-3 align-items-center">
+        <div class="col-auto">
+            <label for="vehicleId" class="form-label">Vehicle ID</label>
+        </div>
+        <div class="col">
+            <InputText id="vehicleId" class="form-control" @bind-Value="uploadModel.VehicleId" />
+            <ValidationMessage For="@(() => uploadModel.VehicleId)" class="text-danger" />
+        </div>
+    </div>
+
+    <!-- File Input Field -->
+    <div class="mb-3">
+        <label for="fileInput" class="form-label">Select Files (Minimum 2 Files)</label>
+        <InputFile id="fileInput" class="form-control" OnChange="@OnInputFileChange" multiple />
+        <!-- Display file validation error -->
+        @if (!isFilesValid)
+        {
+            <span class="text-danger">Please select at least 1 files.</span>
+        }
+    </div>
+
+    <!-- Display Selected Files -->
+    @if (files != null && files.Count > 0)
+    {
+        <div class="mb-3">
+            <h5>Selected Files:</h5>
+            <ul class="list-group">
+                @foreach (var file in files)
+                {
+                    <li class="list-group-item">@file.Name - @file.Size bytes</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Upload Files</button>
+</EditForm>
+
+@code {
+    private IReadOnlyList<IBrowserFile> files;
+    private UploadModel uploadModel = new UploadModel();
+    private bool isFilesValid = true; // Track file validation state
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        // Get the selected files
+        files = e.GetMultipleFiles(); // Use GetMultipleFiles() for multiple files
+        uploadModel.Files = files; // Update the model with the selected files
+
+        // Validate files
+        isFilesValid = files != null && files.Count >= 1;
+    }
+
+    private async Task UploadFiles()
+    {
+        // Perform custom validation for files
+        if (files == null || files.Count < 1)
+        {
+            isFilesValid = false; // Set validation state to false
+            return; // Stop the upload process
+        }
+
+        BlobService.UploadBlob(uploadModel);
+        // Create a multipart form data content
+        // var content = new MultipartFormDataContent();
+
+        // // Add VehicleId to the form data
+        // content.Add(new StringContent(uploadModel.VehicleId), "VehicleId");
+
+        // // Add files to the form data
+        // foreach (var file in files)
+        // {
+        //     var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10 MB max size
+        //     content.Add(fileContent, "files", file.Name);
+        // }
+
+        // Upload the files to a server endpoint
+        // var response = await Http.PostAsync("/api/upload", content);
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     // Handle success
+        //     Console.WriteLine("Files uploaded successfully!");
+        // }
+        // else
+        // {
+        //     // Handle error
+        //     Console.WriteLine("Error uploading files.");
+        // }
+    }
+
+}

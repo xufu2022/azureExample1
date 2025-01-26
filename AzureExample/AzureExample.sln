@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFunctionTangyWeb", "Fu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureTangyFunc", "Functions\AzureTangyFunc\AzureTangyFunc.csproj", "{3AB5B1A6-A04D-48A6-B8BA-404FCB01B47D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{26E8AD5E-1C70-41E5-AF11-7A13956A1ABD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureSamples", "Samples\AzureSamples\AzureSamples.csproj", "{6675719D-D0AC-4E86-AB30-262444C352D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,10 @@ Global
 		{3AB5B1A6-A04D-48A6-B8BA-404FCB01B47D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB5B1A6-A04D-48A6-B8BA-404FCB01B47D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB5B1A6-A04D-48A6-B8BA-404FCB01B47D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6675719D-D0AC-4E86-AB30-262444C352D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6675719D-D0AC-4E86-AB30-262444C352D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6675719D-D0AC-4E86-AB30-262444C352D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6675719D-D0AC-4E86-AB30-262444C352D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,5 +50,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A7EAD5F-8B51-4B3C-B0BC-5B0C78FCF8A5} = {444B1E43-056D-4FF6-AA34-BF5A06E80826}
 		{3AB5B1A6-A04D-48A6-B8BA-404FCB01B47D} = {444B1E43-056D-4FF6-AA34-BF5A06E80826}
+		{6675719D-D0AC-4E86-AB30-262444C352D8} = {26E8AD5E-1C70-41E5-AF11-7A13956A1ABD}
 	EndGlobalSection
 EndGlobal
