@@ -31,9 +31,9 @@ namespace AzureTangyFunc
             var data = JsonConvert.DeserializeObject<SalesRequest>(requestBody);
 
             //await salesRequestQueue.AddAsync(data);
-            var queueClient = _queueServiceClient.GetQueueClient("salesrequestinbound-poison");
+           // var queueClient = _queueServiceClient.GetQueueClient("salesrequestinbound-poison");
             //string message = JsonSerializer.Serialize(requestBody);
-            await queueClient.SendMessageAsync(requestBody);
+          //  await queueClient.SendMessageAsync(requestBody);
 
             var stringRespone= $"Sales Request added to the queue {data.Name}";
             return new OkObjectResult(stringRespone);
