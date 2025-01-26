@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using Azure.Storage.Queues;
 using AzureTangyFunc.Models;
 using Microsoft.AspNetCore.Http;
@@ -30,8 +31,9 @@ namespace AzureTangyFunc
             var data = JsonConvert.DeserializeObject<SalesRequest>(requestBody);
 
             //await salesRequestQueue.AddAsync(data);
-            var queueClient = _queueServiceClient.GetQueueClient("salesrequestinbound");
-            await queueClient.SendMessageAsync("Hello from Azure Functions!");
+            var queueClient = _queueServiceClient.GetQueueClient("salesrequestinbound-poison");
+            //string message = JsonSerializer.Serialize(requestBody);
+            await queueClient.SendMessageAsync(requestBody);
 
             var stringRespone= $"Sales Request added to the queue {data.Name}";
             return new OkObjectResult(stringRespone);
